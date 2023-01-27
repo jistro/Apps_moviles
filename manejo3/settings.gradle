@@ -1,0 +1,2 @@
+rootProject.name = "manejo 3"
+include ':app'
