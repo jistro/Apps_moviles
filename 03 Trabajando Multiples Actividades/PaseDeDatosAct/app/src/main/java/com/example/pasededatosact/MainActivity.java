@@ -4,13 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.textUtils;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class MainActivity extends AppCompatActivity 
-{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText fno, sno;
     private Button btn;
@@ -19,9 +18,9 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fno = (editText) findViewById(R.id.firstno);
-        sno = (editText) findViewById(R.id.secondno);
-        btn = (Button) findViewById(R.id.secondno);
+        fno = (EditText) findViewById(R.id.firstno);
+        sno = (EditText) findViewById(R.id.secondno);
+        btn = (Button) findViewById(R.id.button);
         btn.setOnClickListener(this);
     }
 
@@ -41,6 +40,8 @@ public class MainActivity extends AppCompatActivity
 
         if (!a & !b) 
         {
+            int firstnumber  = Integer.parseInt(fno.getText().toString());
+            int secondnumber = Integer.parseInt(sno.getText().toString());
             Intent intent = new Intent(this, Calculate.class);
             Bundle bundle = new Bundle();
             bundle.putInt("fno", firstnumber);
