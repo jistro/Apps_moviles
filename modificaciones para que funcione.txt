@@ -1,5 +1,4 @@
-gradle.app
-
+gradle.app para construccion
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
