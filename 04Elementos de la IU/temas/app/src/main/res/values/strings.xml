@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">temas</string>
+    <string name="menu_file">file</string>
+    <string name="menu_edit">edit</string>
+    <string name="menu_help">help</string>
+    <string name="menu_exit">exit</string>
+</resources>
