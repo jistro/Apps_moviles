@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Proyecto Demo</string>
+    <string name="launch_sub_activity">launch_sub_act_source</string>
 </resources>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">fragmentos</string>
+    <string name="hola">hola_src</string>
+    <string name="hello">hello_src</string>
+</resources>
