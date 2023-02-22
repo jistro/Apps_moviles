@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/calcularAdulto">
+
+    <fragment
+        android:id="@+id/calcularAdulto"
+        android:name="com.proyecto.calculadoraimc.CalcularAdulto"
+        android:label="fragment_calcular_adulto"
+        tools:layout="@layout/fragment_calcular_adulto" >
+        <action
+            android:id="@+id/action_calcularAdulto_to_calcularNino"
+            app:destination="@id/calcularNino" />
+    </fragment>
+    <fragment
+        android:id="@+id/calcularNino"
+        android:name="com.proyecto.calculadoraimc.CalcularNino"
+        android:label="fragment_calcular_nino"
+        tools:layout="@layout/fragment_calcular_nino" >
+        <action
+            android:id="@+id/action_calcularNino_to_calcularAdulto"
+            app:destination="@id/calcularAdulto" />
+    </fragment>
+</navigation>
