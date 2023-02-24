@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_calcularAdulto_to_calcularNino"
             app:destination="@id/calcularNino" />
+        <action
+            android:id="@+id/action_calcularAdulto_to_resultado"
+            app:destination="@id/resultado" />
     </fragment>
     <fragment
         android:id="@+id/calcularNino"
@@ -22,5 +25,26 @@
         <action
             android:id="@+id/action_calcularNino_to_calcularAdulto"
             app:destination="@id/calcularAdulto" />
+        <action
+            android:id="@+id/action_calcularNino_to_resultadoNino"
+            app:destination="@id/resultadoNino" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultado"
+        android:name="com.proyecto.calculadoraimc.resultado"
+        android:label="fragment_resultado"
+        tools:layout="@layout/fragment_resultado" >
+        <action
+            android:id="@+id/action_resultado_to_calcularAdulto"
+            app:destination="@id/calcularAdulto" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultadoNino"
+        android:name="com.proyecto.calculadoraimc.ResultadoNino"
+        android:label="fragment_resultado_nino"
+        tools:layout="@layout/fragment_resultado_nino" >
+        <action
+            android:id="@+id/action_resultadoNino_to_calcularNino"
+            app:destination="@id/calcularNino" />
     </fragment>
 </navigation>

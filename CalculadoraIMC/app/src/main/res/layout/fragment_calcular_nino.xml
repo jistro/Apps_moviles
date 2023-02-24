@@ -5,174 +5,119 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CalcularNino" >
+    tools:context=".CalcularNino">
 
-    <Button
-        android:id="@+id/buttonAdultos"
-        android:layout_width="204dp"
+    <EditText
+        android:id="@+id/editTextEdadAnno"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/secondary"
-        android:drawableTop="@drawable/adulto_vector"
-        android:text="Adultos"
-        app:fontFamily="@font/lato_bold"
-        android:textSize="10sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/buttonNinos"
-        app:layout_constraintEnd_toStartOf="@+id/buttonNinos"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="260dp"
+        android:ems="10"
+        android:hint="Edad en años"
+        android:inputType="number"
+        app:fontFamily="@font/lato"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextEdadMes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Edad en mes"
+        android:inputType="number"
+        app:fontFamily="@font/lato"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEdadAnno" />
+
+    <EditText
+        android:id="@+id/editTextNumberEstatura"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Estatura en cm"
+        android:inputType="number"
+        app:fontFamily="@font/lato"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEdadMes" />
+
+    <EditText
+        android:id="@+id/editTextNumberPeso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Peso en kg"
+        android:inputType="number"
+        app:fontFamily="@font/lato"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberEstatura" />
+
+    <Switch
+        android:id="@+id/switchSexo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:switchMinWidth="59dp"
+        android:textOff="Niño"
+        android:showText="true"
+        app:fontFamily="@font/lato"
+        android:textOn="Niña"
+        android:track="@drawable/track"
+        android:thumb="@drawable/thumb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberPeso"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Button
         android:id="@+id/buttonNinos"
-        android:layout_width="204dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
         android:background="@color/secondary"
         android:drawableTop="@drawable/ic_children"
         android:text="Niños"
-        app:fontFamily="@font/lato_bold"
         android:textSize="10sp"
+        app:fontFamily="@font/lato_bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/buttonAdultos" />
 
     <Button
-        android:id="@+id/buttonCalcular"
-        android:layout_width="409dp"
-        android:layout_height="50dp"
+        android:id="@+id/buttonAdultos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="2dp"
         android:background="@color/secondary"
-        android:text="Dar resultado"
+        android:drawableTop="@drawable/adulto_vector"
+        android:text="Adultos"
+        android:textSize="10sp"
         app:fontFamily="@font/lato_bold"
-        app:layout_constraintBottom_toTopOf="@+id/buttonAdultos"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/buttonNinos"
+        app:layout_constraintEnd_toStartOf="@+id/buttonNinos"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.988" />
+        tools:ignore="MissingConstraints" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/buttonCalcular"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/roundbotton"
+        android:text="="
+        app:fontFamily="@font/lato_bold"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNinos"
+        app:layout_constraintEnd_toStartOf="@+id/buttonNinos"
+        app:layout_constraintStart_toStartOf="@+id/buttonNinos"
+        app:layout_constraintTop_toTopOf="@+id/buttonNinos"
+        tools:ignore="MissingConstraints" />
 
-        <EditText
-            android:id="@+id/editTextEdadAnno"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:hint="Edad en años"
-            app:fontFamily="@font/lato"
-            android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/editTextEdadMes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.694"
-            app:layout_constraintStart_toEndOf="@+id/toggleButton" />
-
-        <EditText
-            android:id="@+id/editTextEdadMes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:hint="Edad en mes"
-            app:fontFamily="@font/lato"
-            android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/editTextNumberEstatura"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.885"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <EditText
-            android:id="@+id/editTextNumberEstatura"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="228dp"
-            android:ems="10"
-            android:hint="Estatura en cm"
-            app:fontFamily="@font/lato"
-            android:inputType="number"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.89"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <EditText
-            android:id="@+id/editTextNumberPeso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:hint="Peso en kg"
-            app:fontFamily="@font/lato"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.89"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextNumberEstatura" />
-
-        <ToggleButton
-            android:id="@+id/toggleButton2"
-            android:layout_width="80dp"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/ic_man_icon"
-            android:text="Hombre"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/editTextNumberPeso"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toggleButton"
-            app:layout_constraintVertical_bias="0.108" />
-
-        <ToggleButton
-            android:id="@+id/toggleButton"
-            android:layout_width="80dp"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/ic_female_icon"
-            android:text="Mujer"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/editTextNumberEstatura"
-            app:layout_constraintHorizontal_bias="0.489"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.534" />
-
-        <TextView
-            android:id="@+id/textViewSalud"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="66dp"
-            android:text="Ingrese datos"
-            android:textSize="30sp"
-            app:fontFamily="@font/lato_black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewIMC"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="IMC"
-            android:textSize="25sp"
-            app:fontFamily="@font/lato"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewSalud" />
-
-        <TextView
-            android:id="@+id/textViewResultado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="0.00"
-            android:textSize="50sp"
-            app:fontFamily="@font/lato_black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewIMC" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

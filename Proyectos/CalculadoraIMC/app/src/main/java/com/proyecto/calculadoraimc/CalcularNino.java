@@ -33,6 +33,14 @@ public class CalcularNino extends Fragment
                 Navigation.findNavController(view).navigate(R.id.action_calcularNino_to_calcularAdulto);
             }
         });
+        view.findViewById(R.id.buttonCalcular).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Navigation.findNavController(view).navigate(R.id.action_calcularNino_to_resultadoNino);
+            }
+        });
         return view;
     }
 

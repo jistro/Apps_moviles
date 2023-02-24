@@ -24,7 +24,7 @@ public class CalcularAdulto extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        // Inflate the layout for this fragment
+
         final View view = inflater.inflate(R.layout.fragment_calcular_adulto, container, false);
         view.findViewById(R.id.buttonNinos).setOnClickListener(new View.OnClickListener()
         {
@@ -34,6 +34,22 @@ public class CalcularAdulto extends Fragment
                 Navigation.findNavController(view).navigate(R.id.action_calcularAdulto_to_calcularNino);
             }
         });
+
+
+        view.findViewById(R.id.buttonCalcular).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Navigation.findNavController(view).navigate(R.id.action_calcularAdulto_to_resultado);
+            }
+        });
+
+
+
         return view;
     }
+
+
+
 }
