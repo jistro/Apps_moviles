@@ -1,20 +1,25 @@
 package com.proyecto.calculadoraimc;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalcularAdulto#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class CalcularAdulto extends Fragment
 {
+    Switch switchS;
+    String texto;
+
+    //SendDataInterface sendDataInterface;
+
     public CalcularAdulto()
     {
         // Required empty public constructor
@@ -26,6 +31,29 @@ public class CalcularAdulto extends Fragment
     {
 
         final View view = inflater.inflate(R.layout.fragment_calcular_adulto, container, false);
+
+        switchS = (Switch) view.findViewById (R.id.switchSexo);
+
+
+        view.findViewById(R.id.switchSexo).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (view.getId()==R.id.switchSexo)
+                {
+                    if (switchS.isChecked()) //hombre
+                    {
+                        texto="ella es";
+                    }
+                    else
+                    {
+                        texto="el es";
+                    }
+                }
+            }
+        });
+
         view.findViewById(R.id.buttonNinos).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -41,7 +69,9 @@ public class CalcularAdulto extends Fragment
             @Override
             public void onClick(View v)
             {
-                Navigation.findNavController(view).navigate(R.id.action_calcularAdulto_to_resultado);
+                Bundle enviarDatos = new Bundle();
+                enviarDatos.putString("sexo",texto);
+                Navigation.findNavController(view).navigate(R.id.action_calcularAdulto_to_resultado, enviarDatos);
             }
         });
 
