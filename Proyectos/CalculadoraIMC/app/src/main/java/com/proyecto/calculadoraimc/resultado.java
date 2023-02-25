@@ -7,11 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class resultado extends Fragment
 {
@@ -21,22 +19,30 @@ public class resultado extends Fragment
         // Required empty public constructor
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View view;
+        final View view;
         view = inflater.inflate(R.layout.fragment_resultado, container, false);
         view.findViewById(R.id.buttonRegresar);
-        TextView salud = view.findViewById(R.id.textSaludAdulto);
-        salud.setText(getArguments().getString("sexo"));
+        TextView salud = view.findViewById(R.id.textSalud);
+        TextView imc = view.findViewById(R.id.textResultado);
 
-        view.setOnClickListener(new View.OnClickListener() {
 
+        salud.setText(getArguments().getString("textoSalud"));
+        imc.setText(getArguments().getString("imcResulatado"));
+
+
+
+        view.findViewById(R.id.buttonRegresar).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Navigation.findNavController(view).navigate(R.id.action_resultado_to_calcularAdulto);
             }
         });

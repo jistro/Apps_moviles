@@ -8,10 +8,11 @@
     tools:context=".ResultadoNino" >
 
     <TextView
-        android:id="@+id/textSaludAdulto"
+        android:id="@+id/textSaludNino"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="276dp"
+        android:gravity="center"
         android:text="Ingrese datos"
         android:textSize="30sp"
         app:fontFamily="@font/lato_black"
@@ -21,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewResultado"
+        android:id="@+id/textResultadoNino"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -43,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSaludAdulto" />
+        app:layout_constraintTop_toBottomOf="@+id/textSaludNino" />
 
     <Button
         android:id="@+id/buttonRegresar"
