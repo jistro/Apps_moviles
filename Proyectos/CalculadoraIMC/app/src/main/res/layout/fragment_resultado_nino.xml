@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ResultadoNino" >
+    tools:context=".ResultadoNino">
 
     <TextView
         android:id="@+id/textSaludNino"
@@ -50,7 +50,7 @@
         android:id="@+id/buttonRegresar"
         android:layout_width="409dp"
         android:layout_height="50dp"
-        android:layout_marginTop="680dp"
+        android:layout_marginTop="664dp"
         android:background="@color/secondary"
         android:text="Regresar"
         app:fontFamily="@font/lato_bold"
