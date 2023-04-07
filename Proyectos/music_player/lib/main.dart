@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:music_player/Screens/nowPlaying.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:just_audio/just_audio.dart';
@@ -29,21 +31,21 @@ class AllSongs extends StatefulWidget {
 }
 
 class _AllSongsState extends State<AllSongs> {
-  final _audioQuery = new OnAudioQuery();
+  final OnAudioQuery _audioQuery = OnAudioQuery();
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   playSong(String? uri) {
+  if (uri != null) {
     try {
-    _audioPlayer.setAudioSource(
-      AudioSource.uri(
-        Uri.parse(uri!),
-      ),
-    );
-    _audioPlayer.play();
-    } on Exception catch (e) {
-      print("error parsing song: $e");
+      _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri)));
+      _audioPlayer.play();
+    } on Exception {
+      print("error parsing song");
     }
+  } else {
+    print("uri is null");
   }
+}
 
   @override
   void initState() {
@@ -52,12 +54,12 @@ class _AllSongsState extends State<AllSongs> {
   }
 
   
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text('Music Player'),
         actions: [
           IconButton( onPressed: () {}, icon: Icon(Icons.search), ),
@@ -70,6 +72,7 @@ class _AllSongsState extends State<AllSongs> {
           uriType: UriType.EXTERNAL,
           ignoreCase: true,
         ),
+        
         builder: (context, item) {
           if (item.data == null) {
             return const Center(child: CircularProgressIndicator());
@@ -90,12 +93,19 @@ class _AllSongsState extends State<AllSongs> {
                   child: Container(
                     height: 40.0,
                     width: 40.0,
-                    color: Color(0xffFF0E58),
+                    color: Color(0xFF9063CD),
                     child: Icon(Icons.music_note),
                   ),
                 ),
                 onTap: () {
-                  playSong(item.data![index].uri);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NowPlaying(
+                        songModel: item.data![index],
+                      ),
+                    ),
+                  );
                 },
               );
             },
