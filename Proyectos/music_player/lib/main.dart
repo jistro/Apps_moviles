@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:music_player/Screens/nowPlaying.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -90,12 +89,7 @@ class _AllSongsState extends State<AllSongs> {
                 trailing: const Icon(Icons.more_vert),
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(03.0),//or 15.0
-                  child: Container(
-                    height: 40.0,
-                    width: 40.0,
-                    color: Color(0xFF9063CD),
-                    child: Icon(Icons.music_note),
-                  ),
+                  child: _iconAlbum(item, index),
                 ),
                 onTap: () {
                   Navigator.push(
@@ -103,6 +97,7 @@ class _AllSongsState extends State<AllSongs> {
                     MaterialPageRoute(
                       builder: (context) => NowPlaying(
                         songModel: item.data![index],
+                        audioPlayer: _audioPlayer,
                       ),
                     ),
                   );
@@ -113,5 +108,19 @@ class _AllSongsState extends State<AllSongs> {
         },
       ),
     );
+  }
+
+  Container _iconAlbum(AsyncSnapshot<List<SongModel>> item, int index) {
+    return Container(
+                  height: 40.0,
+                  width: 40.0,
+                  color: Color(0xFF9063CD),
+                  child: QueryArtworkWidget(
+                  id: item.data![index].id,
+                  type: ArtworkType.AUDIO,
+                  nullArtworkWidget: const Icon(Icons.music_note),
+                  artworkBorder: BorderRadius.circular(03.0),
+                ),
+                );
   }
 }
