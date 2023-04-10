@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/Screens/nowPlaying.dart';
+import 'package:music_player/provider/song_model_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/src/provider.dart';
+
+
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SongModelProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -64,6 +74,19 @@ class _AllSongsState extends State<AllSongs> {
           IconButton( onPressed: () {}, icon: Icon(Icons.search), ),
         ],
       ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.black,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          
+          children: [
+            
+            IconButton( onPressed: () {}, icon: Icon(Icons.home), ),
+            IconButton( onPressed: () {}, icon: Icon(Icons.favorite), ),
+            IconButton( onPressed: () {}, icon: Icon(Icons.settings), ),
+          ],
+        ),
+      ),
       body: FutureBuilder <List<SongModel>>(
         future: _audioQuery.querySongs(
           sortType: null,
@@ -71,6 +94,8 @@ class _AllSongsState extends State<AllSongs> {
           uriType: UriType.EXTERNAL,
           ignoreCase: true,
         ),
+      
+        
         
         builder: (context, item) {
           if (item.data == null) {
@@ -79,31 +104,36 @@ class _AllSongsState extends State<AllSongs> {
           if (item.data!.isEmpty) {
             return const Center(child: Text('No se encontro ninguna cancion :c'));
           }
-          return ListView.builder(
-            itemCount: item.data!.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                
-                title: Text(item.data![index].title),
-                subtitle: Text(item.data![index].artist ?? 'Desconocido'),
-                trailing: const Icon(Icons.more_vert),
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(03.0),//or 15.0
-                  child: _iconAlbum(item, index),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NowPlaying(
-                        songModel: item.data![index],
-                        audioPlayer: _audioPlayer,
-                      ),
+          return Stack(
+            children:[ 
+              ListView.builder(
+                itemCount: item.data!.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    
+                    title: Text(item.data![index].title),
+                    subtitle: Text(item.data![index].artist ?? 'Desconocido'),
+                    trailing: const Icon(Icons.more_vert),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(03.0),//or 15.0
+                      child: _iconAlbum(item, index),
                     ),
+                    onTap: () {
+                      context.read<SongModelProvider>().setId(item.data![index].id);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NowPlaying(
+                            songModel: item.data![index],
+                            audioPlayer: _audioPlayer,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
+              ),
+            ],
           );
         },
       ),

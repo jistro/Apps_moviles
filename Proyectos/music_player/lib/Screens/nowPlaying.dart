@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:music_player/provider/song_model_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
+import 'package:music_player/provider/song_model_provider.dart';
 
 class NowPlaying extends StatefulWidget {
   const NowPlaying({Key? key, required this.songModel, required this.audioPlayer}) : super(key: key);
@@ -134,7 +137,7 @@ class _NowPlayingState extends State<NowPlaying> {
         height: 300.0,
         width: 300.0,
         color: Color(0xFF9063CD),
-        child: Icon(Icons.music_note, size: 100.0,),
+        child: const CoverWidget(),
         //Icon(Icons.music_note, size: 100.0,),
       ),
     );
@@ -172,4 +175,22 @@ class _NowPlayingState extends State<NowPlaying> {
     widget.audioPlayer.seek(newDuration);
   }
   
+}
+
+class CoverWidget extends StatelessWidget {
+  const CoverWidget({
+    Key? key,
+
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return QueryArtworkWidget(
+      id: context.watch<SongModelProvider>().id,
+      type: ArtworkType.AUDIO,
+      artworkBorder: BorderRadius.circular(03.0),
+      artworkFit: BoxFit.cover,
+      nullArtworkWidget: Icon(Icons.music_note, size: 100.0,),
+    );
+  }
 }
