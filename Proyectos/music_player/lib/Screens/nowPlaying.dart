@@ -6,9 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:music_player/provider/song_model_provider.dart';
 
 class NowPlaying extends StatefulWidget {
-  const NowPlaying({Key? key, required this.songModel, required this.audioPlayer}) : super(key: key);
+  const NowPlaying({Key? key, required this.songModelList, required this.audioPlayer}) : super(key: key);
 
-  final SongModel songModel;
+  //final SongModel songModel;
+  final List<SongModel> songModelList;
   final AudioPlayer audioPlayer;
   
 
@@ -24,6 +25,8 @@ class _NowPlayingState extends State<NowPlaying> {
   //final AudioPlayer _audioPlayer = AudioPlayer();
 
   bool _flagIsPlaying = false;
+  List<AudioSource> playlist = [];
+  int currentSongIndex = 0;
 
   @override
   void initState() {
@@ -32,11 +35,19 @@ class _NowPlayingState extends State<NowPlaying> {
   }
 
   playSong() {
-    if (widget.songModel.data != null) {
+    if (widget.songModelList != null) {
       try {
-        widget.audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.songModel.data.toString())));
-        widget.audioPlayer.play();
-        _flagIsPlaying = true;
+        for (var element in widget.songModelList) {
+          playlist.add(AudioSource.uri(Uri.parse(element.data.toString())));
+          widget.audioPlayer.setAudioSource(ConcatenatingAudioSource(
+            children: playlist,
+          ));
+          widget.audioPlayer.play();
+          _flagIsPlaying = true;
+        }
+        //widget.audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.songModel.data.toString())));
+        //widget.audioPlayer.play();
+        //_flagIsPlaying = true;
       } on Exception {
         print("error parsing song");
       }
@@ -112,14 +123,16 @@ class _NowPlayingState extends State<NowPlaying> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.songModel.title.toString() == "null" ? "Desconocido": widget.songModel.title.toString(),
+              widget.songModelList[currentSongIndex].title.toString() == "null" ? "Desconocido": widget.songModelList[currentSongIndex].title.toString(),
+              //widget.songModel.title.toString() == "null" ? "Desconocido": widget.songModel.title.toString(),
               overflow: TextOverflow.fade,
               maxLines: 1,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 5.0),
             Text(
-              widget.songModel.artist.toString() == "null" ? "Desconocido": widget.songModel.artist.toString(),
+              widget.songModelList[currentSongIndex].artist.toString() == "null" ? "Desconocido": widget.songModelList[currentSongIndex].artist.toString(),
+              //widget.songModel.artist.toString() == "null" ? "Desconocido": widget.songModel.artist.toString(),
               overflow: TextOverflow.fade,
               maxLines: 1,
               style: TextStyle(fontSize: 10.0),
@@ -147,24 +160,56 @@ class _NowPlayingState extends State<NowPlaying> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        IconButton(onPressed: (){
-        }, icon: Icon(Icons.repeat), iconSize: 30,),
-        IconButton(onPressed: (){
-        }, icon: Icon(Icons.skip_previous), iconSize: 30,),
-        IconButton(onPressed: (){
-          setState(() {
-            if(_flagIsPlaying){
-              widget.audioPlayer.pause();
-              _flagIsPlaying = false;
-            }
-            else{
-              widget.audioPlayer.play();
-              _flagIsPlaying = true;
-            }
-          });
-        }, icon: Icon(_flagIsPlaying ? Icons.pause_rounded : Icons.play_arrow), iconSize: 60.0, color: Color(0xFF9063CD),),
-        IconButton(onPressed: (){}, icon: Icon(Icons.skip_next), iconSize: 30,),
-        IconButton(onPressed: (){}, icon: Icon(Icons.shuffle), iconSize: 30,),
+        //repetir
+        IconButton(
+          onPressed: (){
+            
+          }, 
+          icon: Icon(Icons.repeat), 
+          iconSize: 30,
+        ),
+        //anterior
+        IconButton(
+          onPressed: (){
+            widget.audioPlayer.seekToPrevious();
+          }, 
+          icon: Icon(Icons.skip_previous), 
+          iconSize: 30,
+        ),
+        //play/pause
+        IconButton( 
+          onPressed: () {
+            setState( () {
+                if(_flagIsPlaying){
+                  widget.audioPlayer.pause();
+                  _flagIsPlaying = false;
+                }
+                else{
+                  widget.audioPlayer.play();
+                  _flagIsPlaying = true;
+                }
+              }
+            );
+          }, 
+          icon: Icon(_flagIsPlaying ? Icons.pause_rounded : Icons.play_arrow), 
+          iconSize: 60.0, 
+          color: Color(0xFF9063CD),
+        ),
+        //siguiente
+        IconButton(
+          onPressed: () {
+          
+          }, 
+          icon: Icon(Icons.skip_next), iconSize: 30,
+        ),
+        //aleatorio
+        IconButton(
+          onPressed: (){
+            widget.audioPlayer.setShuffleModeEnabled(true);
+          }, 
+          icon: Icon(Icons.shuffle), 
+          iconSize: 30,
+        ),
       ],
     );
   }

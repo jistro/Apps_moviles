@@ -43,6 +43,8 @@ class _AllSongsState extends State<AllSongs> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
   final AudioPlayer _audioPlayer = AudioPlayer();
 
+  List<SongModel> _allsongs = [];
+
   playSong(String? uri) {
   if (uri != null) {
     try {
@@ -74,16 +76,31 @@ class _AllSongsState extends State<AllSongs> {
           IconButton( onPressed: () {}, icon: Icon(Icons.search), ),
         ],
       ),
+      //q: can i make the text and container in the bottom bar to be in the left?
+      //a: yes, use Row and MainAxisAlignment.spaceAround
+      //q:how?
+
       bottomNavigationBar: BottomAppBar(
         color: Colors.black,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Container(
+
+                  height: 40.0,
+                  width: 40.0,
+                  color: Color(0xFF9063CD),
+                  child: Icon(Icons.music_note_rounded, color: Colors.white,)
+            ),
+            SizedBox(width: 10.0,),
+            Row(
+              children: [
+                Text('Song Name'),
+                Text('Artist Name'),
+              ],
+            ),
             
-            IconButton( onPressed: () {}, icon: Icon(Icons.home), ),
-            IconButton( onPressed: () {}, icon: Icon(Icons.favorite), ),
-            IconButton( onPressed: () {}, icon: Icon(Icons.settings), ),
+            IconButton( onPressed: () {}, icon: Icon(Icons.play_arrow_rounded), ),
           ],
         ),
       ),
@@ -109,8 +126,8 @@ class _AllSongsState extends State<AllSongs> {
               ListView.builder(
                 itemCount: item.data!.length,
                 itemBuilder: (context, index) {
+                  _allsongs.addAll(item.data!);
                   return ListTile(
-                    
                     title: Text(item.data![index].title),
                     subtitle: Text(item.data![index].artist ?? 'Desconocido'),
                     trailing: const Icon(Icons.more_vert),
@@ -124,7 +141,7 @@ class _AllSongsState extends State<AllSongs> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => NowPlaying(
-                            songModel: item.data![index],
+                            songModelList: [item.data![index]],
                             audioPlayer: _audioPlayer,
                           ),
                         ),
