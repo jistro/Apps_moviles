@@ -8,11 +8,13 @@ import 'package:provider/provider.dart';
 class NowPlaying extends StatefulWidget {
   final List<SongModel> songModelList;
   final AudioPlayer audioPlayer;
+  final String textToFind="";
 
   const NowPlaying({
     Key? key, 
     required this.songModelList, 
-    required this.audioPlayer
+    required this.audioPlayer, 
+    required String textToFind, 
     }) : super(key: key);
 
   @override
@@ -28,6 +30,7 @@ class _NowPlayingState extends State<NowPlaying> {
   List<AudioSource> songList = [];
 
   int currentIndex = 0;
+  int indexForSong = 0;
 
   void popBack() {
     Navigator.pop(context);
@@ -38,6 +41,7 @@ class _NowPlayingState extends State<NowPlaying> {
     widget.audioPlayer.seek(duration);
   }
 
+  
   
 
   @override
@@ -63,10 +67,20 @@ class _NowPlayingState extends State<NowPlaying> {
           ),
         );
       }
+    print(widget.textToFind);
+    /*
+    for (var i = 0; i < widget.songModelList.length; i++) {
+      if (widget.songModelList[i].title.toString() == widget.textToFind) {
+        indexForSong = i;
+        break;
+      } 
+    }*/
     widget.audioPlayer.setAudioSource(
-        ConcatenatingAudioSource(children: songList),
-        initialIndex: currentIndex
-    );
+        ConcatenatingAudioSource(children: songList),initialIndex: indexForSong
+        
+      );
+
+
     
     widget.audioPlayer.play();
     _flagIsPlaying = true;
@@ -77,16 +91,16 @@ class _NowPlayingState extends State<NowPlaying> {
             _duration = duration;
           });
         }
-    });
+      });
 
     widget.audioPlayer.positionStream.listen((position) {
-      setState(() {
-        _position = position;
+        setState(() {
+          _position = position;
+        });
       });
-    });
-
-    listenToEvent();
-    listenToSongIndex();
+      
+      listenToEvent();
+      listenToSongIndex();
     } on Exception catch (_) {
       popBack();
     }
@@ -139,7 +153,7 @@ class _NowPlayingState extends State<NowPlaying> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.arrow_back_ios)),
+              IconButton(onPressed: (){popBack();}, icon: const Icon(Icons.arrow_back_ios)),
               const SizedBox(height: 30.0,),
               Center(
                 child: Column(

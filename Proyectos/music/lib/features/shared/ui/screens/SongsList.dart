@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -24,9 +25,17 @@ class _AllSongsState extends State<AllSongs> {
   @override
   void initState() {
     super.initState();
-    //Permission.storage.request();
+    requestPermission();
   }
-  
+  requestPermission() async {
+    if (Platform.isAndroid) {
+      bool permissionStatus = await _audioQuery.permissionsStatus();
+      if (!permissionStatus) {
+        await _audioQuery.permissionsRequest();
+      }
+      setState(() {});
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -103,9 +112,14 @@ class _AllSongsState extends State<AllSongs> {
                 
                 itemBuilder: (context, index) {
                   allSongs.addAll(item.data!);
+                  
                   return ListTile(
-                    title: Text(item.data![index].title),
-                    subtitle: Text(item.data![index].artist ?? 'Desconocido'),
+                    //q: como agregar numero de track y titulo en el mismo Text?
+                    //a: usar TextSpan
+                    //q: me enseñas como?
+                    //a: https://api.flutter.dev/flutter/widgets/TextSpan-class.html
+                    title: Text(allSongs[index].title),
+                    subtitle: Text(allSongs[index].artist ?? 'Desconocido'),
                     trailing: const Icon(Icons.more_vert),
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(03.0),//or 15.0
@@ -119,8 +133,10 @@ class _AllSongsState extends State<AllSongs> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => NowPlaying(
-                                songModelList: [item.data![index]],
-                                audioPlayer: _audioPlayer)));
+                                songModelList: [allSongs[index], ...allSongs],
+                                audioPlayer: _audioPlayer,
+                                textToFind: item.data![index].title,
+                                )));
                     },
                     
                   );

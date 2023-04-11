@@ -5,7 +5,11 @@ import 'package:provider/provider.dart';
 import 'features/shared/ui/screens/SongsList.dart';
 
 Future<void> main() async {
-  
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
   runApp(ChangeNotifierProvider(
     create: (context) => SongModelProvider(),
     child: const MyApp(),
@@ -18,7 +22,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Music Player',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: const AllSongs(),
