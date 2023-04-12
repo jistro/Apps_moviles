@@ -5,17 +5,10 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../../provider/song_model_provider.dart';
 import 'NowPlaying.dart';
-
 class AllSongs extends StatefulWidget {
-  final String artistNameNP;
-  final String songNameNP;
-  final bool statusPlayNP;
 
   const AllSongs({
     Key? key,
-      required this.artistNameNP,
-      required this.songNameNP,
-      required this.statusPlayNP,
     }) : super(key: key);
 
   @override
@@ -27,7 +20,7 @@ class _AllSongsState extends State<AllSongs> {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   
-  bool _flagIsPlayingOutside = false;
+  bool _FlagIsPlaying = false;
   List<SongModel> allSongs = [];
 
   @override
@@ -62,38 +55,6 @@ class _AllSongsState extends State<AllSongs> {
           IconButton( onPressed: () {}, icon: const Icon(Icons.search), ),
         ],
       ),
-
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-                  height: 40.0,
-                  width: 40.0,
-                  color: const Color(0xFF9063CD),
-                  child: const Icon(Icons.music_note_rounded, color: Colors.white,)
-            ),
-            const SizedBox(width: 10.0,),
-            Row(
-              children: [
-                Text(widget.songNameNP),
-                Text(widget.artistNameNP),
-              ],
-            ),
-            
-            IconButton( onPressed: () {
-              if (widget.statusPlayNP == false) {
-                _audioPlayer.play();
-                _flagIsPlayingOutside = true;
-              } else {
-                _audioPlayer.pause();
-                  _flagIsPlayingOutside = false;
-              }
-            }, icon: Icon(_flagIsPlayingOutside ? Icons.pause_rounded  : Icons.play_arrow), ),
-          ],
-        ),
-      ),
       body: FutureBuilder <List<SongModel>>(
         future: _audioQuery.querySongs(
           sortType: null,
@@ -101,9 +62,6 @@ class _AllSongsState extends State<AllSongs> {
           uriType: UriType.EXTERNAL,
           ignoreCase: true,
         ),
-      
-        
-        
         builder: (context, item) {
           if (item.data == null) {
             return Center(
@@ -123,6 +81,7 @@ class _AllSongsState extends State<AllSongs> {
           }
           return Stack(
             children:[ 
+              
               ListView.builder(
                 itemCount: item.data!.length,
                 
@@ -130,10 +89,6 @@ class _AllSongsState extends State<AllSongs> {
                   allSongs.addAll(item.data!);
                   
                   return ListTile(
-                    //q: como agregar numero de track y titulo en el mismo Text?
-                    //a: usar TextSpan
-                    //q: me enseñas como?
-                    //a: https://api.flutter.dev/flutter/widgets/TextSpan-class.html
                     title: Text(allSongs[index].title),
                     subtitle: Text(allSongs[index].artist == "<unknown>" ? "Desconocido": allSongs[index].artist.toString()),
                     trailing: const Icon(Icons.more_vert),
@@ -142,9 +97,13 @@ class _AllSongsState extends State<AllSongs> {
                       child: _iconAlbum(item, index),
                     ),
                     onTap: () {
+                      
                       context
                           .read<SongModelProvider>()
                           .setId(item.data![index].id);
+                      setState(() {
+                        _FlagIsPlaying = false;
+                      });
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -153,16 +112,63 @@ class _AllSongsState extends State<AllSongs> {
                                 audioPlayer: _audioPlayer
                                 )));
                     },
-                    
                   );
                 },
               ),
+              _songNowPlayingBar()
             ],
           );
         },
       ),
     );
   }
+
+  Align _songNowPlayingBar() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: 60.0,
+        width: double.infinity,
+        color: Colors.black,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {
+                _audioPlayer.seekToPrevious();
+              }, 
+              icon: const Icon(Icons.skip_previous), iconSize: 30,
+            ),
+            IconButton(
+              onPressed: () {
+                if (_audioPlayer.playing == false) {
+                  _audioPlayer.play();
+                  setState(() {
+                    _FlagIsPlaying = true;
+                  });
+                } else {
+                  _audioPlayer.pause();
+                  setState(() {
+                    _FlagIsPlaying = false;
+                  });
+                }
+              }, 
+              icon: Icon(_audioPlayer.playing ? Icons.pause : Icons.play_arrow),
+              iconSize: 40,
+            ),
+            IconButton(
+              onPressed: () {
+                _audioPlayer.seekToNext();
+              }, 
+              icon: const Icon(Icons.skip_next), iconSize: 30,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 
   Container _iconAlbum(AsyncSnapshot<List<SongModel>> item, int index) {
     return Container(

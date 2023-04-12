@@ -31,6 +31,7 @@ class _NowPlayingState extends State<NowPlaying> {
   bool _flagIsShuffling = false;
   List<AudioSource> songList = [];
 
+
   int currentIndex = 0;
   int indexForSong = 0;
 
@@ -38,9 +39,6 @@ class _NowPlayingState extends State<NowPlaying> {
     Navigator.pop(context,
                   MaterialPageRoute(
                     builder: (context) => AllSongs(
-                      artistNameNP: widget.songModelList[currentIndex].artist.toString(),
-                      songNameNP: widget.songModelList[currentIndex].title.toString(),
-                      statusPlayNP: _flagIsPlaying,
                     )
                   ),
     );
@@ -172,27 +170,7 @@ class _NowPlayingState extends State<NowPlaying> {
                     _albumImg(),
                     const SizedBox(height: 80.0,),
                     _infoMusicText(),
-                    Row(
-                      children: [
-                        Text('${_position.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(_position.inSeconds.remainder(60)).toString().padLeft(2, '0')}'),
-                          Expanded(
-                            child: Slider(
-                              min: 0.0,
-                              value: _position.inSeconds.toDouble(), 
-                              max: _duration.inSeconds.toDouble()+1,
-                              onChanged: (value) {
-                                setState(() {
-                                  seekToSeconds(value.toInt());
-                                  value = value;
-                                });
-                              }, 
-                              activeColor: const Color(0xFF9063CD), 
-                              inactiveColor: Colors.grey,
-                            ),
-                          ),
-                        Text('${_duration.inHours > 0 ? '${_duration.inHours.toString().padLeft(2, '0')}:' : ''}${_duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(_duration.inSeconds.remainder(60)).toString().padLeft(2, '0')}'),
-                      ],
-                    ),
+                    _timeBar(),
                     _interactionsBar()
                   ]
                 )
@@ -204,8 +182,32 @@ class _NowPlayingState extends State<NowPlaying> {
     );
   }
 
-  
+  Row _timeBar() {
+    return Row(
+      children: [
+        Text('${_position.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(_position.inSeconds.remainder(60)).toString().padLeft(2, '0')}'),
+          Expanded(
+            child: Slider(
+              min: 0.0,
+              value: _position.inSeconds.toDouble(), 
+              max: _duration.inSeconds.toDouble()+1,
+              onChanged: (value) {
+                setState(() {
+                  seekToSeconds(value.toInt());
+                  value = value;
+                });
+              }, 
+            activeColor: const Color(0xFF9063CD), 
+            inactiveColor: Colors.grey,
+          ),
+        ),
+        Text('${_duration.inHours > 0 ? '${_duration.inHours.toString().padLeft(2, '0')}:' : ''}${_duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(_duration.inSeconds.remainder(60)).toString().padLeft(2, '0')}'),
+      ],
+    );
+  }
 
+  
+  // muestra el nombre de la cancion y el artista
   Row _infoMusicText() {
     return Row(
       children: [
@@ -237,6 +239,7 @@ class _NowPlayingState extends State<NowPlaying> {
     );
   }
 
+  // muestra la imagen del album
   ClipRRect _albumImg() {
     return ClipRRect(
     borderRadius: BorderRadius.circular(03.0),//or 15.0
@@ -250,6 +253,7 @@ class _NowPlayingState extends State<NowPlaying> {
     );
   }
 
+  // muestra los botones de play, pause, repetir, anterior y siguiente
   Row _interactionsBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -281,7 +285,7 @@ class _NowPlayingState extends State<NowPlaying> {
         IconButton( 
           onPressed: () {
             setState( () {
-                if(_flagIsPlaying){
+                if(widget.audioPlayer.playing){
                   widget.audioPlayer.pause();
                   _flagIsPlaying = false;
                 }

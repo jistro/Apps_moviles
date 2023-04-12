@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: AllSongs(statusPlayNP: false, artistNameNP: ' ', songNameNP: '',),
+      home: AllSongs(),
     );
   }
 }
