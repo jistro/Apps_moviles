@@ -3,18 +3,19 @@ import 'package:just_audio/just_audio.dart';
 import 'package:music_player/provider/song_model_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-import 'package:music_player/provider/song_model_provider.dart';
 
 class NowPlaying extends StatefulWidget {
-  const NowPlaying({Key? key, required this.songModelList, required this.audioPlayer}) : super(key: key);
-
-  //final SongModel songModel;
   final List<SongModel> songModelList;
   final AudioPlayer audioPlayer;
-  
+
+  const NowPlaying({
+    Key? key, 
+    required this.songModelList, 
+    required this.audioPlayer
+    }) : super(key: key);
 
   @override
-  _NowPlayingState createState() => _NowPlayingState();
+  State<NowPlaying> createState() => _NowPlayingState();
 }
 
 class _NowPlayingState extends State<NowPlaying> {
@@ -22,11 +23,13 @@ class _NowPlayingState extends State<NowPlaying> {
   Duration _duration = const Duration();
   Duration _position = const Duration();
 
-  //final AudioPlayer _audioPlayer = AudioPlayer();
-
   bool _flagIsPlaying = false;
   List<AudioSource> playlist = [];
   int currentSongIndex = 0;
+
+  void popBack() {
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
@@ -34,26 +37,21 @@ class _NowPlayingState extends State<NowPlaying> {
     playSong();
   }
 
-  playSong() {
-    if (widget.songModelList != null) {
-      try {
-        for (var element in widget.songModelList) {
-          playlist.add(AudioSource.uri(Uri.parse(element.data.toString())));
-          widget.audioPlayer.setAudioSource(ConcatenatingAudioSource(
-            children: playlist,
-          ));
-          widget.audioPlayer.play();
-          _flagIsPlaying = true;
-        }
-        //widget.audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.songModel.data.toString())));
-        //widget.audioPlayer.play();
-        //_flagIsPlaying = true;
-      } on Exception {
-        print("error parsing song");
+  void playSong() {
+    try {
+      for (var element in widget.songModelList) {
+        playlist.add(
+          AudioSource.uri(
+            Uri.parse(element.uri!),
+          ),
+        );
       }
-    } else {
-      print("uri is null");
-    }
+    widget.audioPlayer.setAudioSource(
+        ConcatenatingAudioSource(children: playlist),
+      );
+    widget.audioPlayer.play();
+    _flagIsPlaying = true;
+
     widget.audioPlayer.durationStream.listen((duration) {
       setState(() {
         _duration = duration!;
@@ -64,6 +62,9 @@ class _NowPlayingState extends State<NowPlaying> {
         _position = position;
       });
     });
+    } on Exception catch (_) {
+      popBack();
+    }
   }
 
   @override
@@ -89,12 +90,14 @@ class _NowPlayingState extends State<NowPlaying> {
                         Text('${_position.inMinutes.remainder(60).toString().padLeft(2, '0')}:${(_position.inSeconds.remainder(60)).toString().padLeft(2, '0')}'),
                           Expanded(
                             child: Slider(
-                              min: Duration(milliseconds: 0).inSeconds.toDouble(),
+                              min: 0.0,
                               value: _position.inSeconds.toDouble(), 
-                              max: _duration.inSeconds.toDouble(),
+                              max: _duration.inSeconds.toDouble()+1,
                               onChanged: (value) {
-                                changeToSeconds(value.toInt());
-                                value = value;
+                                setState(() {
+                                  _position = Duration(seconds: value.toInt());
+                                  widget.audioPlayer.seek(_position);
+                                });
                               }, 
                               activeColor: Color(0xFF9063CD), 
                               inactiveColor: Colors.grey,
@@ -123,19 +126,20 @@ class _NowPlayingState extends State<NowPlaying> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.songModelList[currentSongIndex].title.toString() == "null" ? "Desconocido": widget.songModelList[currentSongIndex].title.toString(),
-              //widget.songModel.title.toString() == "null" ? "Desconocido": widget.songModel.title.toString(),
-              overflow: TextOverflow.fade,
-              maxLines: 1,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
+                  widget.songModelList[currentSongIndex].title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          overflow: TextOverflow.ellipsis),
+                      maxLines: 1,
+                    ),
             SizedBox(height: 5.0),
             Text(
-              widget.songModelList[currentSongIndex].artist.toString() == "null" ? "Desconocido": widget.songModelList[currentSongIndex].artist.toString(),
-              //widget.songModel.artist.toString() == "null" ? "Desconocido": widget.songModel.artist.toString(),
-              overflow: TextOverflow.fade,
+              widget.songModelList[currentSongIndex].artist == "null" ? "Desconocido": widget.songModelList[currentSongIndex].artist.toString(),
+              style: const TextStyle(
+                          fontSize: 10.0,
+                          overflow: TextOverflow.ellipsis),
               maxLines: 1,
-              style: TextStyle(fontSize: 10.0),
             ),
           ],
         ),
@@ -215,10 +219,6 @@ class _NowPlayingState extends State<NowPlaying> {
   }
 
 
-  void changeToSeconds(int seconds) {
-    Duration newDuration = Duration(seconds: seconds);
-    widget.audioPlayer.seek(newDuration);
-  }
   
 }
 

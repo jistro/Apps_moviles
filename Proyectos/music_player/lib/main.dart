@@ -76,9 +76,6 @@ class _AllSongsState extends State<AllSongs> {
           IconButton( onPressed: () {}, icon: Icon(Icons.search), ),
         ],
       ),
-      //q: can i make the text and container in the bottom bar to be in the left?
-      //a: yes, use Row and MainAxisAlignment.spaceAround
-      //q:how?
 
       bottomNavigationBar: BottomAppBar(
         color: Colors.black,
