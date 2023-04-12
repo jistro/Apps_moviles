@@ -3,14 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../provider/song_model_provider.dart';
 import 'NowPlaying.dart';
 
-
-
 class AllSongs extends StatefulWidget {
-  const AllSongs({Key? key}) : super(key: key);
+  final String artistNameNP;
+  final String songNameNP;
+  final bool statusPlayNP;
+
+  const AllSongs({
+    Key? key,
+      required this.artistNameNP,
+      required this.songNameNP,
+      required this.statusPlayNP,
+    }) : super(key: key);
 
   @override
   State<AllSongs> createState() => _AllSongsState();
@@ -20,6 +26,8 @@ class _AllSongsState extends State<AllSongs> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
   final AudioPlayer _audioPlayer = AudioPlayer();
 
+  
+  bool _flagIsPlayingOutside = false;
   List<SongModel> allSongs = [];
 
   @override
@@ -68,13 +76,21 @@ class _AllSongsState extends State<AllSongs> {
             ),
             const SizedBox(width: 10.0,),
             Row(
-              children: const [
-                Text('Song Name'),
-                Text('Artist Name'),
+              children: [
+                Text(widget.songNameNP),
+                Text(widget.artistNameNP),
               ],
             ),
             
-            IconButton( onPressed: () {}, icon: const Icon(Icons.play_arrow_rounded), ),
+            IconButton( onPressed: () {
+              if (widget.statusPlayNP == false) {
+                _audioPlayer.play();
+                _flagIsPlayingOutside = true;
+              } else {
+                _audioPlayer.pause();
+                  _flagIsPlayingOutside = false;
+              }
+            }, icon: Icon(_flagIsPlayingOutside ? Icons.pause_rounded  : Icons.play_arrow), ),
           ],
         ),
       ),
@@ -119,7 +135,7 @@ class _AllSongsState extends State<AllSongs> {
                     //q: me enseñas como?
                     //a: https://api.flutter.dev/flutter/widgets/TextSpan-class.html
                     title: Text(allSongs[index].title),
-                    subtitle: Text(allSongs[index].artist ?? 'Desconocido'),
+                    subtitle: Text(allSongs[index].artist == "<unknown>" ? "Desconocido": allSongs[index].artist.toString()),
                     trailing: const Icon(Icons.more_vert),
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(03.0),//or 15.0
@@ -134,8 +150,7 @@ class _AllSongsState extends State<AllSongs> {
                         MaterialPageRoute(
                           builder: (context) => NowPlaying(
                                 songModelList: [allSongs[index], ...allSongs],
-                                audioPlayer: _audioPlayer,
-                                textToFind: item.data![index].title,
+                                audioPlayer: _audioPlayer
                                 )));
                     },
                     

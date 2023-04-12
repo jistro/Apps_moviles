@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:music/features/shared/ui/screens/SongsList.dart';
 import 'package:music/provider/song_model_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +9,12 @@ import 'package:provider/provider.dart';
 class NowPlaying extends StatefulWidget {
   final List<SongModel> songModelList;
   final AudioPlayer audioPlayer;
-  final String textToFind="";
+
 
   const NowPlaying({
     Key? key, 
     required this.songModelList, 
-    required this.audioPlayer, 
-    required String textToFind, 
+    required this.audioPlayer
     }) : super(key: key);
 
   @override
@@ -27,13 +27,23 @@ class _NowPlayingState extends State<NowPlaying> {
   Duration _position = const Duration();
 
   bool _flagIsPlaying = false;
+  bool _flagIsLooping = false;
+  bool _flagIsShuffling = false;
   List<AudioSource> songList = [];
 
   int currentIndex = 0;
   int indexForSong = 0;
 
   void popBack() {
-    Navigator.pop(context);
+    Navigator.pop(context,
+                  MaterialPageRoute(
+                    builder: (context) => AllSongs(
+                      artistNameNP: widget.songModelList[currentIndex].artist.toString(),
+                      songNameNP: widget.songModelList[currentIndex].title.toString(),
+                      statusPlayNP: _flagIsPlaying,
+                    )
+                  ),
+    );
   }
 
   void seekToSeconds(int seconds) {
@@ -67,14 +77,12 @@ class _NowPlayingState extends State<NowPlaying> {
           ),
         );
       }
-    print(widget.textToFind);
-    /*
-    for (var i = 0; i < widget.songModelList.length; i++) {
-      if (widget.songModelList[i].title.toString() == widget.textToFind) {
+    for (var i = 1; i < widget.songModelList.length; i++) {
+      if (widget.songModelList[i].title.toString() == widget.songModelList[0].title.toString()) {
         indexForSong = i;
         break;
       } 
-    }*/
+    }
     widget.audioPlayer.setAudioSource(
         ConcatenatingAudioSource(children: songList),initialIndex: indexForSong
         
@@ -153,10 +161,13 @@ class _NowPlayingState extends State<NowPlaying> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(onPressed: (){popBack();}, icon: const Icon(Icons.arrow_back_ios)),
+              IconButton(onPressed: (){
+                popBack();
+              }, icon: const Icon(Icons.arrow_back_ios)),
               const SizedBox(height: 30.0,),
-              Center(
+              Flexible(
                 child: Column(
+                  mainAxisAlignment:  MainAxisAlignment.spaceBetween,
                   children: [
                     _albumImg(),
                     const SizedBox(height: 80.0,),
@@ -198,26 +209,29 @@ class _NowPlayingState extends State<NowPlaying> {
   Row _infoMusicText() {
     return Row(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                  widget.songModelList[currentIndex].title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                          overflow: TextOverflow.ellipsis),
-                      maxLines: 1,
-                    ),
-            const SizedBox(height: 5.0),
-            Text(
-              widget.songModelList[currentIndex].artist == "null" ? "Desconocido": widget.songModelList[currentIndex].artist.toString(),
-              style: const TextStyle(
-                          fontSize: 10.0,
-                          overflow: TextOverflow.ellipsis),
-              maxLines: 1,
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                    widget.songModelList[currentIndex].title,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25.0,
+                            overflow: TextOverflow.visible
+                            ),
+                        maxLines: 1,
+                      ),
+              const SizedBox(height: 5.0),
+              Text(
+                widget.songModelList[currentIndex].artist == "<unknown>" ? "Desconocido": widget.songModelList[currentIndex].artist.toString(),
+                style: const TextStyle(
+                            fontSize: 10.0,
+                            overflow: TextOverflow.ellipsis),
+                maxLines: 1,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -243,9 +257,16 @@ class _NowPlayingState extends State<NowPlaying> {
         //repetir
         IconButton(
           onPressed: (){
-            
+            if (_flagIsLooping== false){
+              widget.audioPlayer.setLoopMode(LoopMode.one);
+              _flagIsLooping = true;
+            }
+            else{
+              widget.audioPlayer.setLoopMode(LoopMode.off);
+              _flagIsLooping = false;
+            }
           }, 
-          icon: const Icon(Icons.repeat), 
+          icon:  Icon(_flagIsLooping  ? Icons.repeat_one_rounded : Icons.repeat_rounded),
           iconSize: 30,
         ),
         //anterior
@@ -278,18 +299,24 @@ class _NowPlayingState extends State<NowPlaying> {
         //siguiente
         IconButton(
           onPressed: () {
-          
+            widget.audioPlayer.seekToNext();
           }, 
           icon: const Icon(Icons.skip_next), iconSize: 30,
         ),
         //aleatorio
         IconButton(
           onPressed: (){
-            widget.audioPlayer.setShuffleModeEnabled(true);
+            if (_flagIsShuffling == false) {
+              widget.audioPlayer.setShuffleModeEnabled(true);
+              _flagIsShuffling = true;
+            } else {
+              widget.audioPlayer.setShuffleModeEnabled(false);
+              _flagIsShuffling = false;
+            }
           }, 
-          icon: const Icon(Icons.shuffle), 
+          icon: Icon(_flagIsShuffling ? Icons.shuffle_rounded  : Icons.shuffle),
           iconSize: 30,
-        ),
+        )
       ],
     );
   }

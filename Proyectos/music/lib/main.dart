@@ -17,14 +17,15 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const AllSongs(),
+      home: AllSongs(statusPlayNP: false, artistNameNP: ' ', songNameNP: '',),
     );
   }
 }
