@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class _AllSongsState extends State<AllSongs> {
   
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -52,7 +54,6 @@ class _AllSongsState extends State<AllSongs> {
           ),
         ),
         actions: [
-          IconButton( onPressed: () {}, icon: const Icon(Icons.search), ),
         ],
       ),
       body: FutureBuilder <List<SongModel>>(
@@ -123,50 +124,69 @@ class _AllSongsState extends State<AllSongs> {
     );
   }
 
-  Align _songNowPlayingBar() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: 60.0,
-        width: double.infinity,
+
+//q: en este _songNowPlayingBar() como puedo hacer que se levante un poco de la parte inferiro de la pantalla
+// a: con el Align() y el Container() que estan dentro de el
+Align _songNowPlayingBar() {
+  return Align(
+    alignment: Alignment.bottomCenter,
+    child: Container(
+      height: 50.0,
+      width: MediaQuery.of(context).size.width * .95,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
         color: Colors.black,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              onPressed: () {
-                _audioPlayer.seekToPrevious();
-              }, 
-              icon: const Icon(Icons.skip_previous), iconSize: 30,
-            ),
-            IconButton(
-              onPressed: () {
-                if (_audioPlayer.playing == false) {
-                  _audioPlayer.play();
-                  setState(() {
-                    _FlagIsPlaying = true;
-                  });
-                } else {
-                  _audioPlayer.pause();
-                  setState(() {
-                    _FlagIsPlaying = false;
-                  });
-                }
-              }, 
-              icon: Icon(_audioPlayer.playing ? Icons.pause : Icons.play_arrow),
-              iconSize: 40,
-            ),
-            IconButton(
-              onPressed: () {
-                _audioPlayer.seekToNext();
-              }, 
-              icon: const Icon(Icons.skip_next), iconSize: 30,
-            ),
-          ],
-        ),
+        borderRadius: BorderRadius.circular(15),
       ),
-    );
-  }
+      margin: EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            onPressed: () {
+              _audioPlayer.seekToPrevious();
+            }, 
+            icon: const Icon(Icons.skip_previous), iconSize: 30,
+          ),
+          IconButton(
+            onPressed: () {
+              if (_audioPlayer.playing == false) {
+                _audioPlayer.play();
+                setState(() {
+                  _FlagIsPlaying = true;
+                });
+              } else {
+                _audioPlayer.pause();
+                setState(() {
+                  _FlagIsPlaying = false;
+                });
+              }
+            }, 
+            icon: Icon(_audioPlayer.playing ? Icons.pause : Icons.play_arrow),
+            iconSize: 40,
+          ),
+          IconButton(
+            onPressed: () {
+              _audioPlayer.seekToNext();
+            }, 
+            icon: const Icon(Icons.skip_next), iconSize: 30,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+
+
 
 
 
