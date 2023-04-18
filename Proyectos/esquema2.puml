@@ -1,0 +1,23 @@
+@startuml
+skinparam actorStyle Hollow 
+
+actor usuario
+
+usuario -> android: solicita permiso de almacenamiento
+android -> usuario: permiso concedido
+usuario -> aplicacion: accede a la aplicacion
+aplicacion -> android: solicita localizacion de musica
+android -> aplicacion: localizacion de musica
+
+database "almacenamiento local" as almacenamiento_local
+aplicacion -> almacenamiento_local: obtiene lista de musica
+almacenamiento_local -> aplicacion: lista de musica
+
+usuario -> aplicacion: selecciona musica de lista
+aplicacion -> almacenamiento_local : solicita musica seleccionada
+almacenamiento_local -> aplicacion : obtiene musica seleccionada
+
+usuario -> aplicacion: interactua con lista de musica
+
+
+@enduml
