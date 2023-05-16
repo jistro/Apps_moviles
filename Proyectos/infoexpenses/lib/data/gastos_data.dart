@@ -7,6 +7,7 @@ import '../models/items_gastos.dart';
 class GastosData  extends ChangeNotifier{
   // lista de gastos
   List<ItemGastos> LIST_overallExpenses = [];
+  double TOTAL_expenses = 0.0;
 
   List<ItemGastos> getAllExpenses() {
     return LIST_overallExpenses;
@@ -15,18 +16,32 @@ class GastosData  extends ChangeNotifier{
   // agregar gasto
   void addNewExpense(ItemGastos gasto) {
     LIST_overallExpenses.add(gasto);
+    notifyListeners();
   }
 
   // eliminar gasto
 
   void deleteExpense(ItemGastos gasto) {
     LIST_overallExpenses.remove(gasto);
+    notifyListeners();
   }
 
   // editar gasto
   void editExpense(ItemGastos gasto, ItemGastos gastoEditado) {
     LIST_overallExpenses.remove(gasto);
     LIST_overallExpenses.add(gastoEditado);
+    notifyListeners();
+  }
+
+  // obtener todo el gasto total
+  double getTotalExpenses() {
+    TOTAL_expenses = 0.0;
+
+    for (var expense in LIST_overallExpenses) {
+      double amount = double.parse(expense.amount);
+      TOTAL_expenses += amount;
+    }
+    return TOTAL_expenses;
   }
 
   // obtener dia de la semana
@@ -52,14 +67,16 @@ class GastosData  extends ChangeNotifier{
   }
 
   // obtener inicio de la semana (lunes)
-  DateTime getStartOfWeek(DateTime dateTime){
-    DateTime? startOfWeek;
+  DateTime getStartOfWeek(){
 
     // obten dia de hoy
     DateTime today = DateTime.now();
   
+    DateTime? startOfWeek;
+
+    
     // ve de reversa hasta el lunes
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 7; i++) {
       if (getDayName(today.subtract(Duration(days: i))) == 'Lunes') {
         startOfWeek = today.subtract(Duration(days: i));
       }
@@ -87,4 +104,5 @@ class GastosData  extends ChangeNotifier{
     }
     return dalyExpenseSumary;
   }
+
 }
