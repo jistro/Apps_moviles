@@ -84,32 +84,32 @@ Widget getBottomTitles(double value, TitleMeta meta){
   Widget text;
   switch (value.toInt()){
     case 0:
-      text = Text('L', style: style);
+      text = const Text('L', style: style);
       break;
     case 1:
-      text = Text('M', style: style);
+      text = const Text('M', style: style);
       break;
     case 2:
-      text = Text('X', style: style);
+      text = const Text('X', style: style);
       break;
     case 3:
-      text = Text('J', style: style);
+      text = const Text('J', style: style);
       break;
     case 4:
-      text = Text('V', style: style);
+      text = const Text('V', style: style);
       break;
     case 5:
-      text = Text('S', style: style);
+      text = const Text('S', style: style);
       break;
     case 6:
-      text = Text('D', style: style);
+      text = const Text('D', style: style);
       break;
     default:
-      text = Text('', style: style);
+      text = const Text('', style: style);
       break;
   }
   return SideTitleWidget(
-    child: text,
     axisSide: meta.axisSide,
+    child: text,
     );
 }

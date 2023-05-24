@@ -12,7 +12,7 @@ class GastosData  extends ChangeNotifier{
   List<ItemGastos> getAllExpenses() {
     return listOverallExpenses;
   }
-  
+
   final bd = HiveDatabase();
   void prepareData() {
     if (bd.leerGasto().isNotEmpty) {
@@ -40,9 +40,10 @@ class GastosData  extends ChangeNotifier{
   }
 
   // editar gasto
-  void editExpense(ItemGastos gasto, ItemGastos gastoEditado) {
-    listOverallExpenses.remove(gasto);
+  void editExpense(ItemGastos gastoviejo, ItemGastos gastoEditado) {
+    listOverallExpenses.remove(gastoviejo);
     listOverallExpenses.add(gastoEditado);
+    bd.editarGasto(gastoviejo, gastoEditado);
     notifyListeners();
   }
 
@@ -56,6 +57,7 @@ class GastosData  extends ChangeNotifier{
     }
     return totalExpenses;
   }
+
 
   // obtener dia de la semana
   String getDayName(DateTime dateTime){
