@@ -8,19 +8,26 @@ import 'package:provider/provider.dart';
 import 'package:infoexpenses/componets/gastos_title.dart';
 
 import '../models/items_gastos.dart';
-class Home extends StatefulWidget 
-{
+class Home extends StatefulWidget {
+  const Home({ Key? key }) : super(key: key);
   @override
-  _HomeState createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 class _HomeState extends State<Home> 
 {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<GastosData>(context, listen: false).prepareData();
+  }
   @override
   Widget build(BuildContext context) 
   {
     // text controller
     final newExpenseNameController = TextEditingController();
     final newExpenseAmountController = TextEditingController();
+
+    
 
     void clearControllers(){
       newExpenseNameController.clear();
@@ -31,7 +38,7 @@ class _HomeState extends State<Home>
       ItemGastos newExpense = ItemGastos(
         name: newExpenseNameController.text,
         amount: newExpenseAmountController.text,
-        date: DateTime.now().toString(),
+        date: DateTime.now(),
       );
       Provider.of<GastosData>(context, listen: false).addNewExpense(newExpense);
       Navigator.pop(context);
@@ -53,72 +60,77 @@ class _HomeState extends State<Home>
           ),
         ),
         context: context,
+        isScrollControlled: true,
         builder: (BuildContext context) {
-          return Container(
-            height: 200,
-            color: Colors.brown.shade50,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: TextField(
-                      controller: newExpenseNameController,
-                      decoration: InputDecoration(
-                        hintText: 'Nombre del gasto',
-                        hintStyle: TextStyle(
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: TextField(
-                      controller: newExpenseAmountController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: 'Cantidad',
-                      ),
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: ElevatedButton(
-                          child: const Text('Guardar'),
-                          onPressed: save,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade500,
-                            foregroundColor: Colors.white,
+          return Padding(
+            padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              height: 200,
+              color: Colors.brown.shade50,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: TextField(
+                        controller: newExpenseNameController,
+                        decoration: InputDecoration(
+                          hintText: 'Nombre del gasto',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Inter',
                           ),
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: ElevatedButton(
-                          child: const Text('Cancelar'),
-                          onPressed: cancel,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red.shade500,
-                            foregroundColor: Colors.white,
-                          ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: TextField(
+                        controller: newExpenseAmountController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'Cantidad',
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: ElevatedButton(
+                            child: const Text('Guardar'),
+                            onPressed: save,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green.shade500,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          child: ElevatedButton(
+                            child: const Text('Cancelar'),
+                            onPressed: cancel,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red.shade500,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -178,7 +190,7 @@ class _HomeState extends State<Home>
               itemBuilder: (context, index) => ExpenseTitle(
                 name: value.getAllExpenses()[index].name,
                 amount: value.getAllExpenses()[index].amount,
-                dateTime: DateTime.parse(value.getAllExpenses()[index].date),
+                dateTime: value.getAllExpenses()[index].date,
               ),
             ),
         ],),

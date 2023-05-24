@@ -1,7 +1,7 @@
 class ItemGastos {
   final String name;
   final String amount;
-  final String date;
+  final DateTime date;
 
   ItemGastos({
     required this.name,

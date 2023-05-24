@@ -1,47 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:infoexpenses/data/base_datos.dart';
 import '../datetime/datetime_helper.dart';
 import '../models/items_gastos.dart';
 
-
-
 class GastosData  extends ChangeNotifier{
+  
   // lista de gastos
-  List<ItemGastos> LIST_overallExpenses = [];
-  double TOTAL_expenses = 0.0;
+  List<ItemGastos> listOverallExpenses = [];
+  double totalExpenses = 0.0;
 
   List<ItemGastos> getAllExpenses() {
-    return LIST_overallExpenses;
+    return listOverallExpenses;
+  }
+  
+  final bd = HiveDatabase();
+  void prepareData() {
+    if (bd.leerGasto().isNotEmpty) {
+      listOverallExpenses = bd.leerGasto();
+    } else {
+      listOverallExpenses = [];
+    }
+
+    
   }
 
   // agregar gasto
   void addNewExpense(ItemGastos gasto) {
-    LIST_overallExpenses.add(gasto);
+    listOverallExpenses.add(gasto);
     notifyListeners();
+    bd.guardarGasto(listOverallExpenses);
   }
 
   // eliminar gasto
 
   void deleteExpense(ItemGastos gasto) {
-    LIST_overallExpenses.remove(gasto);
+    listOverallExpenses.remove(gasto);
     notifyListeners();
+    bd.eliminarGasto(gasto);
   }
 
   // editar gasto
   void editExpense(ItemGastos gasto, ItemGastos gastoEditado) {
-    LIST_overallExpenses.remove(gasto);
-    LIST_overallExpenses.add(gastoEditado);
+    listOverallExpenses.remove(gasto);
+    listOverallExpenses.add(gastoEditado);
     notifyListeners();
   }
 
   // obtener todo el gasto total
   double getTotalExpenses() {
-    TOTAL_expenses = 0.0;
+    totalExpenses = 0.0;
 
-    for (var expense in LIST_overallExpenses) {
+    for (var expense in listOverallExpenses) {
       double amount = double.parse(expense.amount);
-      TOTAL_expenses += amount;
+      totalExpenses += amount;
     }
-    return TOTAL_expenses;
+    return totalExpenses;
   }
 
   // obtener dia de la semana
@@ -90,16 +103,16 @@ class GastosData  extends ChangeNotifier{
       // date (ddmmyyyy) : amountTotalForDay
     };
 
-    for (var expense in LIST_overallExpenses) {
-      String Date = convertDateTimeToString(expense.dateTime!);
+    for (var expense in listOverallExpenses) {
+      String date = convertDateTimeToString(expense.dateTime??DateTime.now());
       double amount = double.parse(expense.amount);
       
-      if (dalyExpenseSumary.containsKey(Date)) {
-        double currentAmount = dalyExpenseSumary[Date]!;
+      if (dalyExpenseSumary.containsKey(date)) {
+        double currentAmount = dalyExpenseSumary[date]!;
         currentAmount += amount;
-        dalyExpenseSumary[Date] = currentAmount;  
+        dalyExpenseSumary[date] = currentAmount;  
       } else {
-        dalyExpenseSumary.addAll({Date: amount});
+        dalyExpenseSumary.addAll({date: amount});
       }
     }
     return dalyExpenseSumary;

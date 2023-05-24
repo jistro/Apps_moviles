@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infoexpenses/datetime/datetime_helper.dart';
 import 'package:infoexpenses/graph/grafico_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -13,19 +14,26 @@ class GraficoTotal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String lunes = convertDateTimeToString(inicioSemana.add(const Duration(days: 0)));
+    String martes = convertDateTimeToString(inicioSemana.add(const Duration(days: 1)));
+    String miercoles = convertDateTimeToString(inicioSemana.add(const Duration(days: 2)));
+    String jueves = convertDateTimeToString(inicioSemana.add(const Duration(days: 3)));
+    String viernes = convertDateTimeToString(inicioSemana.add(const Duration(days: 4)));
+    String sabado = convertDateTimeToString(inicioSemana.add(const Duration(days: 5)));
+    String domingo = convertDateTimeToString(inicioSemana.add(const Duration(days: 6)));
     return Consumer<GastosData>(
       builder: (context, value, child) =>
       SizedBox(
         height: 150,
         child: GraficoDeBarras(
-          maxY: 100,
-          lunCantidad: 10,
-          marCantidad: 45,
-          mieCantidad: 85,
-          jueCantidad: 60,
-          vieCantidad: 30,
-          sabCantidad: 20,
-          domCantidad: 45,
+          maxY: value.getTotalExpenses(),
+          lunCantidad: value.calculateDalyExpenseSumary()[lunes] ?? 0,
+          marCantidad: value.calculateDalyExpenseSumary()[martes] ?? 0,
+          mieCantidad: value.calculateDalyExpenseSumary()[miercoles] ?? 0,
+          jueCantidad: value.calculateDalyExpenseSumary()[jueves] ?? 0,
+          vieCantidad: value.calculateDalyExpenseSumary()[viernes] ?? 0,
+          sabCantidad: value.calculateDalyExpenseSumary()[sabado] ?? 0,
+          domCantidad: value.calculateDalyExpenseSumary()[domingo] ?? 0,
         ),
       ),
   );
