@@ -39,7 +39,8 @@ class ExpenseTitle extends StatelessWidget {
       ),
       child: ListTile(
         title: Text(name),
-        subtitle:  Text('${dateTime.day}/${dateTime.month}/${dateTime.year}'),
+        // formato dd/mm/aaaa hh:mm
+        subtitle:  Text('${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}'),
         trailing: Text('\$ ${amount}'),
       ),
     );

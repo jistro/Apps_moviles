@@ -14,22 +14,55 @@ class Home extends StatefulWidget {
   
 }
 
+
 class _HomeState extends State<Home> {
+  DateTime fechaAElegir = DateTime.now();
+
   @override
   void initState() {
     super.initState();
     Provider.of<GastosData>(context, listen: false).prepareData();
   }
-
+  
   @override
   Widget build(BuildContext context) 
   {
     // text controller
     final newExpenseNameController = TextEditingController();
     final newExpenseAmountController = TextEditingController();
+    // date controller
+    
+
     void clearControllers(){
       newExpenseNameController.clear();
       newExpenseAmountController.clear();
+    }
+
+    void changeDate() async{
+      // cambiar fecha
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: fechaAElegir,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null && picked != fechaAElegir)
+        setState(() {
+          fechaAElegir = DateTime(picked.year, picked.month, picked.day, fechaAElegir.hour, fechaAElegir.minute);
+        });
+
+    }
+
+    void timeChange () async{
+      // cambiar hora
+      final TimeOfDay? picked = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (picked != null)
+        setState(() {
+          fechaAElegir = DateTime(fechaAElegir.year, fechaAElegir.month, fechaAElegir.day, picked.hour, picked.minute);
+      });
     }
 
     void saveExpense() {
@@ -43,12 +76,13 @@ class _HomeState extends State<Home> {
         ItemGastos newExpense = ItemGastos(
           name: newExpenseNameController.text,
           amount: amount.toString(),
-          date: DateTime.now(),
+          date: fechaAElegir,
         );
 
         Provider.of<GastosData>(context, listen: false).addNewExpense(newExpense);
       }
       Navigator.pop(context);
+      fechaAElegir = DateTime.now();
       clearControllers();
     }
     void saveIncome(){
@@ -58,17 +92,19 @@ class _HomeState extends State<Home> {
         ItemGastos newExpense = ItemGastos(
           name: newExpenseNameController.text,
           amount: newExpenseAmountController.text,
-          date: DateTime.now(),
+          date: fechaAElegir,
         );
         Provider.of<GastosData>(context, listen: false).addNewExpense(newExpense);
       }
       Navigator.pop(context);
+      fechaAElegir = DateTime.now();
       clearControllers();
     }
 
 
     void cancel(){
       Navigator.pop(context);
+      fechaAElegir = DateTime.now();
       clearControllers();
     }
 
@@ -84,10 +120,10 @@ class _HomeState extends State<Home> {
     }
 
     
-    // agergar gasto
+    // agergar gasto nuevo
     void addNewExpense() {
+      fechaAElegir = DateTime.now();
       showModalBottomSheet(
-        
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical( 
             top: Radius.circular(25.0),
@@ -100,11 +136,12 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-              height: 200,
+              height: 250,
               color: Colors.brown.shade50,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const SizedBox(height: 10),
                   Expanded(
                     flex: 1,
                     child: Container(
@@ -133,6 +170,62 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10),
+                  // seccion de fecha y hora
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: ElevatedButton(
+                              //agregamos icono de calendario junto con la fecha
+                              onPressed: changeDate,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.calendar_today),
+                                  Text('  ${fechaAElegir.day}/${fechaAElegir.month}/${fechaAElegir.year}'),
+                                ],
+                              ),
+                              
+                              style: ElevatedButton.styleFrom(
+                                // debe ser invisible
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: ElevatedButton(
+                              //agregamos icono de calendario junto con la fecha
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.access_time),
+                                  Text('  ${fechaAElegir.hour}:${fechaAElegir.minute}'),
+                                ],
+                              ),
+                              onPressed: timeChange,
+                              style: ElevatedButton.styleFrom(
+                                // debe ser invisible
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  // boton de guardar y cancelar
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Expanded(
@@ -186,11 +279,12 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-              height: 200,
+              height: 250,
               color: Colors.brown.shade50,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const SizedBox(height: 10),
                   Expanded(
                     flex: 1,
                     child: Container(
@@ -219,6 +313,61 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 15),
+                  // seccion de fecha y hora
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: ElevatedButton(
+                              //agregamos icono de calendario junto con la fecha
+                              onPressed: changeDate,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.calendar_today),
+                                  Text('  ${fechaAElegir.day}/${fechaAElegir.month}/${fechaAElegir.year}'),
+                                ],
+                              ),
+                              
+                              style: ElevatedButton.styleFrom(
+                                // debe ser invisible
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: ElevatedButton(
+                              //agregamos icono de calendario junto con la fecha
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.access_time),
+                                  Text('  ${fechaAElegir.hour}:${fechaAElegir.minute}'),
+                                ],
+                              ),
+                              onPressed: timeChange,
+                              style: ElevatedButton.styleFrom(
+                                // debe ser invisible
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  // boton de guardar y cancelar
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Expanded(
