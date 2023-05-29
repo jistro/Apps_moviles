@@ -66,10 +66,15 @@ class _HomeState extends State<Home> {
     }
 
     void saveExpense() {
+      // guarda en una variable auxiliar el getTotalExpenses()
       // guardar solo si todo esta lleno
       if (newExpenseAmountController.text.isNotEmpty &&
           newExpenseNameController.text.isNotEmpty &&
-          double.parse(newExpenseAmountController.text) > 0
+          double.parse(newExpenseAmountController.text) > 0 &&
+          Provider.of<GastosData>(context, listen: false).getTotalExpenses()  > 0 &&
+          double.parse(newExpenseAmountController.text) <= Provider.of<GastosData>(context, listen: false).getTotalExpenses()
+          
+          
           ) {
         double amount = double.parse(newExpenseAmountController.text) * -1;
 
@@ -109,7 +114,26 @@ class _HomeState extends State<Home> {
     }
 
     void delete(ItemGastos gasto){
-      Provider.of<GastosData>(context, listen: false).deleteExpense(gasto);
+      // si getTotalExpenses() - gasto a eliminar es menor a 0 no se puede eliminar
+      if (Provider.of<GastosData>(context, listen: false).getTotalExpenses() - double.parse(gasto.amount) >= 0)
+      {
+        Provider.of<GastosData>(context, listen: false).deleteExpense(gasto);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Eliminado'),
+          ),
+        );
+        
+      }
+      else
+      {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No se puede eliminar'),
+          ),
+        );
+      }
+      
     }
 
     void edit(ItemGastos gastoViejo, ItemGastos gastoEditado){
@@ -537,7 +561,6 @@ class _HomeState extends State<Home> {
                 dateTime: value.getAllExpenses()[index].date,
                 presionaBorrar: (p0) => delete(value.getAllExpenses()[index]),
                 presionaEditar: (p0) => editExpense(value.getAllExpenses()[index]),
-
               ),
             ),
         ],),

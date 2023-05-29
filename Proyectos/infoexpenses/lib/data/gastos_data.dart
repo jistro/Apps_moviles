@@ -9,7 +9,7 @@ class GastosData  extends ChangeNotifier{
   List<ItemGastos> listOverallExpenses = [];
   double totalExpenses = 0.0;
 
-  List<ItemGastos> getAllExpenses() {
+  List<ItemGastos > getAllExpenses() {
     return listOverallExpenses;
   }
 

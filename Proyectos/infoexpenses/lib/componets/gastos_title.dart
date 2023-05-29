@@ -41,7 +41,16 @@ class ExpenseTitle extends StatelessWidget {
         title: Text(name),
         // formato dd/mm/aaaa hh:mm
         subtitle:  Text('${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}'),
-        trailing: Text('\$ ${amount}'),
+        // formato $ 00.00 si es negativo se pone en rojo y si es positivo en verde
+        // si es negativo ademas del color el formato es -$00.00
+        trailing:   Text(
+          amount.startsWith('-')
+              ? '-\$${amount.substring(1)}'
+              : '\$$amount',
+          style: TextStyle(
+            color: amount.startsWith('-') ? Colors.red : Colors.green,
+          ),
+        ),
       ),
     );
   }

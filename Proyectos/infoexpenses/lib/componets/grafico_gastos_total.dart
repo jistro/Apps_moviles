@@ -69,13 +69,13 @@ class GraficoTotal extends StatelessWidget {
                 sabado,
                 domingo,
               ),
-              lunCantidad: value.calculateDalyExpenseSumary()[lunes] ?? 0,
-              marCantidad: value.calculateDalyExpenseSumary()[martes] ?? 0,
-              mieCantidad: value.calculateDalyExpenseSumary()[miercoles] ?? 0,
-              jueCantidad: value.calculateDalyExpenseSumary()[jueves] ?? 0,
-              vieCantidad: value.calculateDalyExpenseSumary()[viernes] ?? 0,
-              sabCantidad: value.calculateDalyExpenseSumary()[sabado] ?? 0,
-              domCantidad: value.calculateDalyExpenseSumary()[domingo] ?? 0,
+                lunCantidad: (value.calculateDalyExpenseSumary()[lunes] ?? 0).clamp(0, double.infinity),
+                marCantidad: (value.calculateDalyExpenseSumary()[martes] ?? 0).clamp(0, double.infinity),
+                mieCantidad: (value.calculateDalyExpenseSumary()[miercoles] ?? 0).clamp(0, double.infinity),
+                jueCantidad: (value.calculateDalyExpenseSumary()[jueves] ?? 0).clamp(0, double.infinity),
+                vieCantidad: (value.calculateDalyExpenseSumary()[viernes] ?? 0).clamp(0, double.infinity),
+                sabCantidad: (value.calculateDalyExpenseSumary()[sabado] ?? 0).clamp(0, double.infinity),
+                domCantidad: (value.calculateDalyExpenseSumary()[domingo] ?? 0).clamp(0, double.infinity),
             ),
           ),
           const SizedBox(height: 10),
@@ -86,12 +86,18 @@ class GraficoTotal extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          // total de gastos el formato es $ 00.00 si es negativo se pone en rojo y el formato es -$00.00
           Text(
-            '\$${value.getTotalExpenses().toStringAsFixed(2)}',
-            style: const TextStyle(
+            value.getTotalExpenses().toString().startsWith('-')
+                ? '-\$${value.getTotalExpenses().toString().substring(1)}'
+                : '\$${value.getTotalExpenses()}',
+            style: TextStyle(
               fontSize: 20,
-              ),
+              color: value.getTotalExpenses().toString().startsWith('-')
+                  ? Colors.red
+                  : Colors.black,
             ),
+          ),
         ],
       ),
   );
